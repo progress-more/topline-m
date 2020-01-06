@@ -1,5 +1,6 @@
 <template>
   <div class="app">
+    <h1>首页</h1>
     <!-- 根路由出口 -->
     <router-view></router-view>
   </div>
@@ -12,5 +13,7 @@ export default {
 </script>
 
 <style>
-
+h1{
+  font-size: 20px;
+}
 </style>
