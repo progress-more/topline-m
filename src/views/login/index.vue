@@ -7,25 +7,58 @@
     <!-- 表单域 -->
       <van-cell-group>
       <van-field
+        v-model="user.mobile"
         required
         clearable
         label="手机号"
         placeholder="请输入手机号"
       />
 
-      <van-field required label="验证码" placeholder="请输入验证码">
+      <van-field v-model="user.code" required label="验证码" placeholder="请输入验证码">
         <van-button slot="button" size="small" type="primary">发送验证码</van-button>
       </van-field>
     </van-cell-group>
     <div class="login-btn">
-      <van-button type="info">登录</van-button>
+      <van-button @click='onLogin' type="info">登录</van-button>
     </div>
   </div>
 </template>
 
 <script>
+import { login } from '@/api/user'
 export default {
-  name: 'loginPage'
+  name: 'loginPage',
+  data () {
+    return {
+      user: {
+        mobile: '',
+        code: ''
+      }
+    }
+  },
+  methods: {
+    // 点击登录
+    async onLogin () {
+      // 轻提示是单例模式 同一时间只会存在一个toast
+      this.$toast.loading({
+        message: '登录中...',
+        forbidClick: true,
+        loadingType: 'spinner'
+      })
+      // 获取表单数据
+      // 验证表单
+      // 请求提交
+      try {
+        let res = await login(this.user)
+        this.$toast.success('登录成功')
+        console.log(res)
+      } catch (error) {
+        // console.log(error)
+        this.$toast.fail('登录失败')
+      }
+      // 返回处理
+    }
+  }
 }
 </script>
 
