@@ -15,7 +15,13 @@
       />
 
       <van-field left-icon='lock' v-model="user.code" label="验证码" placeholder="请输入验证码">
-        <van-button slot="button" size="small" type="primary">发送验证码</van-button>
+        <van-count-down v-if="isCountDownShow" format="ss 秒" slot="button" :time="1000*60" />
+        <van-button
+        slot="button"
+        size="small"
+        type="primary"
+        round
+        >发送验证码</van-button>
       </van-field>
     </van-cell-group>
     <div class="login-btn">
@@ -33,7 +39,8 @@ export default {
       user: {
         mobile: '',
         code: ''
-      }
+      }, // 用户信息
+      isCountDownShow: false // 倒计时是否显示
     }
   },
   methods: {
