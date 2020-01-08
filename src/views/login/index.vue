@@ -7,14 +7,14 @@
     <!-- 表单域 -->
       <van-cell-group>
       <van-field
+        left-icon='graphic'
         v-model="user.mobile"
-        required
         clearable
         label="手机号"
         placeholder="请输入手机号"
       />
 
-      <van-field v-model="user.code" required label="验证码" placeholder="请输入验证码">
+      <van-field left-icon='lock' v-model="user.code" label="验证码" placeholder="请输入验证码">
         <van-button slot="button" size="small" type="primary">发送验证码</van-button>
       </van-field>
     </van-cell-group>
