@@ -15,8 +15,8 @@
       v-slot=‘{errors}’获取错误信息-->
     <!-- van-cell-group不是必须的 只是给cell提供上下外边框 -->
     <!-- 表单域 -->
-      <ValidationObserver>
-        <ValidationProvider name='手机号' rules='required' v-slot='{ errors }'>
+      <ValidationObserver ref="form">
+        <ValidationProvider name='手机号' rules='required'>
           <van-field
             left-icon='graphic'
             v-model="user.mobile"
@@ -24,13 +24,13 @@
             label="手机号"
             placeholder="请输入手机号"
           />
-          <!-- errors[0]获取验证失败的错误信息 -->
-          <span>{{ errors[0] }}</span>
+          <!-- errors[0]获取验证失败的错误信息
+          移动端一般不再输入框下提示错误 基本是$toast-->
+          <!-- <span>{{ errors[0] }}</span> -->
         </ValidationProvider>
 
-        <ValidationProvider>
+        <ValidationProvider name='验证码' rules='required'>
           <van-field left-icon='lock' v-model="user.code" label="验证码" placeholder="请输入验证码">
-
             <van-count-down
             @finish='isCountDownShow=false'
             v-if="isCountDownShow"
@@ -90,14 +90,47 @@ export default {
     },
     // 点击登录
     async onLogin () {
-      // 轻提示是单例模式 同一时间只会存在一个toast
+      // 1.获取表单数据
+      // const user = this.user
+      // 2.表单验证
+      const success = await this.$refs.form.validate()
+      if (!success) {
+        // Vue调试工具中 输入ValidationObserver 可以看到这个组件实例的data数据对象
+        // 里面有errors对象 放置的是错误信息 当触发验证时错误信息的数组便会有长度
+        // 而我们要提示的信息 就是找到的第一个错误信息
+        // 由于插件有一些问题 so需用定时器
+        setTimeout(() => {
+          const errors = this.$refs.form.errors
+          // 将错误对象取出来
+          // 将错误对象的值 提取出来形成新的数组
+          // 若无错误则值为空即undefined
+          // 若有错误 则为字符串 则返回该元素
+          // 1. const item = Object.values(errors).find(item => {
+          //   if (item) {
+          //     return item[0]
+          //   }
+          // })
+          // this.$toast(item[0])
+          // 2. for (let key in errors) {
+          //   const item = errors[key]
+          //   if (item[0]) {
+          //     this.$toast(item[0])
+          //     return
+          //   }
+          // }
+          const item = Object.values(errors).find(item => item[0])
+          this.$toast(item[0])
+        }, 100)
+        this.$toast('验证失败')
+        return
+      }
+      // 3.验证通过 提示请求中 轻提示是单例模式 同一时间只会存在一个toast
       this.$toast.loading({
         message: '登录中...',
         forbidClick: true,
         loadingType: 'spinner'
       })
-      // 获取表单数据
-      // 验证表单
+
       // 请求提交
       try {
         let res = await login(this.user)
