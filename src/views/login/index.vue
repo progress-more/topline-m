@@ -16,7 +16,7 @@
     <!-- van-cell-group不是必须的 只是给cell提供上下外边框 -->
     <!-- 表单域 -->
       <ValidationObserver ref="form">
-        <ValidationProvider name='手机号' rules='required'>
+        <ValidationProvider name='手机号' rules='required|mobile'>
           <van-field
             left-icon='graphic'
             v-model="user.mobile"
@@ -29,7 +29,7 @@
           <!-- <span>{{ errors[0] }}</span> -->
         </ValidationProvider>
 
-        <ValidationProvider name='验证码' rules='required'>
+        <ValidationProvider name='验证码' rules='required|code'>
           <van-field left-icon='lock' v-model="user.code" label="验证码" placeholder="请输入验证码">
             <van-count-down
             @finish='isCountDownShow=false'
@@ -54,6 +54,7 @@
 
 <script>
 import { login, getSmsCode } from '@/api/user'
+import { validate } from 'vee-validate'
 export default {
   name: 'loginPage',
   data () {
@@ -71,6 +72,19 @@ export default {
       // 获取手机号
       let { mobile } = this.user
       // 验证手机号
+      // 参数：1.要验证的数据， 2.验证规则，3.一个可选的配置对象，例如配置错误消息字段名称name
+      // 返回值：{valid，errors，...}
+      //   valid:验证是否成功，成功true，失败false
+      //  errors：数组，错误提示信息
+      const validateRes = await validate(mobile, 'required|mobile', {
+        name: '手机号'
+      })
+
+      // 如果验证失败 ，提示错误信息 停止发送验证码
+      if (!validateRes.valid) {
+        this.$toast(validateRes.errors[0])
+        return
+      }
       try {
         // 倒计时显示
         this.isCountDownShow = true
@@ -94,6 +108,7 @@ export default {
       // const user = this.user
       // 2.表单验证
       const success = await this.$refs.form.validate()
+      // 如果验证失败 提示错误信息 停止表单提交
       if (!success) {
         // Vue调试工具中 输入ValidationObserver 可以看到这个组件实例的data数据对象
         // 里面有errors对象 放置的是错误信息 当触发验证时错误信息的数组便会有长度
