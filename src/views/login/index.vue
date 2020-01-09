@@ -4,31 +4,48 @@
       <van-nav-bar
       title="登录"
     />
+    <!-- vee-validate 验证插件使用：
+    1.使用ValidationObserver 把需要校验的整个表单包起来
+    2.使用ValidationProvider 把需要校验的及具体表单元素包起来
+    3.通过 ValidationProvider 配置具体的校验规则
+      name 配置验证字段的名称
+      rules 验证规则
+      rules="requried" 单个验证规则
+      rules="required|length:4" 多个验证规则使用 | 分隔
+      v-slot=‘{errors}’获取错误信息-->
+    <!-- van-cell-group不是必须的 只是给cell提供上下外边框 -->
     <!-- 表单域 -->
-      <van-cell-group>
-      <van-field
-        left-icon='graphic'
-        v-model="user.mobile"
-        clearable
-        label="手机号"
-        placeholder="请输入手机号"
-      />
+      <ValidationObserver>
+        <ValidationProvider name='手机号' rules='required' v-slot='{ errors }'>
+          <van-field
+            left-icon='graphic'
+            v-model="user.mobile"
+            clearable
+            label="手机号"
+            placeholder="请输入手机号"
+          />
+          <!-- errors[0]获取验证失败的错误信息 -->
+          <span>{{ errors[0] }}</span>
+        </ValidationProvider>
 
-      <van-field left-icon='lock' v-model="user.code" label="验证码" placeholder="请输入验证码">
-        <van-count-down
-        @finish='isCountDownShow=false'
-         v-if="isCountDownShow"
-         format="ss 秒" slot="button"
-         :time="1000*60" />
-        <van-button
-        @click='onSendSmsCode'
-        slot="button"
-        size="small"
-        type="primary"
-        round
-        >发送验证码</van-button>
-      </van-field>
-    </van-cell-group>
+        <ValidationProvider>
+          <van-field left-icon='lock' v-model="user.code" label="验证码" placeholder="请输入验证码">
+
+            <van-count-down
+            @finish='isCountDownShow=false'
+            v-if="isCountDownShow"
+            format="ss 秒" slot="button"
+            :time="1000*60" />
+            <van-button
+            @click='onSendSmsCode'
+            slot="button"
+            size="small"
+            type="primary"
+            round
+            >发送验证码</van-button>
+          </van-field>
+        </ValidationProvider>
+    </ValidationObserver>
     <div class="login-btn">
       <van-button @click='onLogin' type="info">登录</van-button>
     </div>
