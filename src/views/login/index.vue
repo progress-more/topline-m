@@ -105,7 +105,7 @@ export default {
     // 点击登录
     async onLogin () {
       // 1.获取表单数据
-      // const user = this.user
+      const user = this.user
       // 2.表单验证
       const success = await this.$refs.form.validate()
       // 如果验证失败 提示错误信息 停止表单提交
@@ -148,9 +148,12 @@ export default {
 
       // 请求提交
       try {
-        let res = await login(this.user)
+        let res = await login(user)
+        // 登录成功  将token存入Vuex容器中 并存入本地以保持持久化
+        this.$store.commit('setUser', res.data.data)
         this.$toast.success('登录成功')
-        console.log(res)
+
+        // console.log(res)
       } catch (error) {
         // console.log(error)
         this.$toast.fail('登录失败')
