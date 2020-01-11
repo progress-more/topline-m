@@ -152,7 +152,7 @@ export default {
         // 登录成功  将token存入Vuex容器中 并存入本地以保持持久化
         this.$store.commit('setUser', res.data.data)
         this.$toast.success('登录成功')
-
+        this.$router.push('/')
         // console.log(res)
       } catch (error) {
         // console.log(error)
