@@ -39,11 +39,23 @@ export default {
   },
   methods: {
     // 下拉刷新
-    onRefresh () {
-      setTimeout(() => {
-        this.$toast('刷新成功')
-        this.isLoading = false
-      }, 1000)
+    async onRefresh () {
+      // 请求获取数据
+      const { data } = await getArticles({
+        channel_id: this.channel.id, // 频道id
+        // 第一次使用 Date.now()获取最新数据
+        // 下一页的数据使用本次返回的数据中的timestamp
+        timestamp: Date.now(), // 时间戳 ，
+        // 请求新的推荐数据传当前的时间戳 请求历史推荐传指定的时间戳
+        with_top: 1
+      })
+      //   2.如果有最新数据 则把数据放到列表的顶部
+      const { results } = data.data
+      this.list.unshift(...results)
+      //   3.关闭下拉刷新的loading状态
+      this.isLoading = false
+      // 4.提示更新成功
+      this.$toast(`更新了${results.length}条数据`)
     },
     // 上拉加载更多调用onload
     async onLoad () {
