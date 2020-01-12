@@ -15,6 +15,15 @@
        <article-list :channel='channel'/>
       </van-tab>
     </van-tabs>
+
+    <!-- 弹出层组件 -->
+    <van-popup
+      v-model="isChannelEditShow"
+      closeable
+      close-icon-position="top-left"
+      position="bottom"
+      :style="{ height: '100%' }"
+    />
   </div>
 </template>
 
@@ -30,7 +39,8 @@ export default {
   data () {
     return {
       active: 0,
-      userChannels: [] // 接收用户频道列表
+      userChannels: [], // 接收用户频道列表
+      isChannelEditShow: true // 频道编辑的显示状态
     }
   },
   methods: {
