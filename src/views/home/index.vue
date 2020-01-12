@@ -6,6 +6,13 @@
     <!-- tab组件 v-model=‘active’控制被激活的标签
     title 标签标题 -->
     <van-tabs v-model="active">
+      <!-- 利用tab标签页的tabs上的插槽 定义面包按钮 点击显示弹出层 -->
+        <van-icon
+        name='wap-nav'
+        class="wap-nav"
+        slot="nav-right"
+        @click="isChannelEditShow=true"
+        />
       <van-tab
       :title="channel.name"
       v-for="channel in userChannels"
@@ -40,7 +47,7 @@ export default {
     return {
       active: 0,
       userChannels: [], // 接收用户频道列表
-      isChannelEditShow: true // 频道编辑的显示状态
+      isChannelEditShow: false // 频道编辑的显示状态
     }
   },
   methods: {
@@ -68,6 +75,12 @@ export default {
       left: 0;
       right: 0;
       z-index: 2;
+      .wap-nav {
+        position: fixed;
+        right: 0;
+        line-height: 44px;
+        background-color: #fff;
+      }
     }
   }
 </style>
