@@ -1,7 +1,7 @@
 <template>
   <div class="my-container">
     <!-- 已登录 -->
-    <div class="user-info-wrap">
+    <div v-if="$store.state.user" class="user-info-wrap">
       <div class="base-info-wrap">
         <div class="avatar-title-wrap">
           <van-image class="avatar" round fit='cover' src='https://img.yzcdn.cn/vant/cat.jpeg'/>
@@ -29,7 +29,7 @@
       </van-grid>
     </div>
     <!-- 未登录 -->
-    <div class="not-login">
+    <div v-else class="not-login">
       <div class="mobile"></div>
       <div class="text">点击登录</div>
     </div>
