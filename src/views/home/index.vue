@@ -30,7 +30,9 @@
       close-icon-position="top-left"
       position="bottom"
       :style="{ height: '100%' }"
-    />
+    >
+      <channel-edit/>
+    </van-popup>
   </div>
 </template>
 
@@ -38,10 +40,12 @@
 import { getUserChannels } from '@/api/user'
 // 引入文章列表组件
 import ArticleList from './components/article-list'
+import ChannelEdit from './components/channel-edit'
 export default {
   name: 'homePage',
   components: {
-    ArticleList
+    ArticleList,
+    ChannelEdit
   },
   data () {
     return {
