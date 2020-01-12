@@ -52,7 +52,8 @@
       <van-cell title="小智同学" is-link />
     </van-cell-group>
 
-    <van-cell-group>
+<!-- 当用户登录时 即有token令牌时 才可以点击退出 -->
+    <van-cell-group v-if="$store.state.user" @click="onLogout">
       <van-cell
         style="text-align: center;"
         title="退出登录"
@@ -82,6 +83,20 @@ export default {
       } catch (error) {
         this.$toast('获取数据失败')
       }
+    },
+    // 退出登录
+    onLogout () {
+      // 点击确定信息
+      this.$dialog.confirm({
+        title: '退出提示',
+        message: '确认退出吗?'
+      }).then(() => {
+        // 清除登录状态
+        this.$store.commit('setUser', null)
+      }).catch(() => {
+        // 取消的话提示
+        // this.$toast('已取消退出')
+      })
     }
   },
   created () {
