@@ -1,6 +1,6 @@
 // 用户相关请求模块
 import request from '@/utils/request'
-
+// 登录注册
 export const login = (data) => {
   return request({
     // 请求方法
@@ -15,8 +15,17 @@ export const login = (data) => {
     data
   })
 }
+// 获取短信验证码
 export const getSmsCode = mobile => {
   return request({
     url: `/app/v1_0/sms/codes/${mobile}`
+  })
+}
+
+// 获取用户信息
+export const getUserInfo = () => {
+  return request({
+    url: '/app/v1_0/user',
+    method: 'GET'
   })
 }
