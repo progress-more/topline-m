@@ -7,14 +7,22 @@
         <van-button
         size='mini'
         type='danger'
-        round>编辑</van-button>
+        round
+        plain
+        @click='isEditShow = !isEditShow'>
+        {{isEditShow ? '完成' : '编辑'}}
+        </van-button>
     </van-cell>
     <van-grid :gutter='10'>
         <van-grid-item
         v-for="channel in userChannels"
         :key="channel.id"
         :text="channel.name">
-          <van-icon slot="icon" class="close-icon" name="close" />
+          <van-icon
+          v-show="isEditShow"
+          slot="icon"
+          class="close-icon"
+          name="close" />
         </van-grid-item>
     </van-grid>
     <!-- 推荐频道 -->
@@ -43,7 +51,8 @@ export default {
   },
   data () {
     return {
-      allChannels: []
+      allChannels: [],
+      isEditShow: false // 编辑的显示状态
     }
   },
   methods: {
