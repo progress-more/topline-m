@@ -1,7 +1,9 @@
 <template>
   <div class="home-container">
     <!-- 导航栏 -->
-    <van-nav-bar title="首页" fixed/>
+    <van-nav-bar title="首页" fixed>
+      <van-icon @click="$router.push('/search')" name="search" slot="right" />
+    </van-nav-bar>
     <!-- 频道列表 -->
     <!-- tab组件 v-model=‘active’控制被激活的标签
     title 标签标题 -->
@@ -110,6 +112,11 @@ export default {
         right: 0;
         line-height: 44px;
         background-color: #fff;
+      }
+    }
+    .van-nav-bar__right {
+      .van-icon  {
+        color: #fff;
       }
     }
   }

@@ -126,6 +126,7 @@ export default {
         padding-top: 46px;
         ::v-deep.van-grid-item__content {
           position:relative;
+          background-color: #f4f5f6;
           .van-grid-item__icon-wrapper {
             position: absolute;
             top: -10px;
@@ -137,6 +138,7 @@ export default {
         }
         .text {
           font-size: 14px;
+          color: #222;
         }
         .active {
           color: red;
