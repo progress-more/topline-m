@@ -22,6 +22,7 @@
         v-for="channel in remainingChannels"
         :key="channel.id"
         :text="channel.name"
+        @click='onAdd(channel)'
       />
     </van-grid>
   </div>
@@ -44,6 +45,11 @@ export default {
     }
   },
   methods: {
+    // 点击添加频道
+    onAdd (channel) {
+      this.userChannels.push(channel)
+    },
+    // 加载所有频道
     async loadAllChannels () {
       const { data } = await getAllChannels()
       console.log(data)
