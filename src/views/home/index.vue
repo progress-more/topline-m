@@ -31,7 +31,18 @@
       position="bottom"
       :style="{ height: '100%' }"
     >
-      <channel-edit :user-channels='userChannels'/>
+    <!-- 让子组件双向绑定active
+    在组件上使用v-model 默认传递一个名字叫value的数据给子组件 :value='active'
+    默认监听名字叫 input的自定义事件： @input='active=事件参数'
+    当子组件内部发布this.$emit('input',123)
+    v-model 还是父子通信
+    什么时候用？当你想要在子组件和父组件之间同步一些数据的时候，建议使用v-model，更简洁
+    它的本质还是父子组建通信
+    在一个组件上，v-model只能使用一次-->
+      <channel-edit
+      :user-channels='userChannels'
+      v-model="active"
+      @close = 'isChannelEditShow = false'/>
     </van-popup>
   </div>
 </template>
@@ -49,9 +60,9 @@ export default {
   },
   data () {
     return {
-      active: 0,
+      active: 0, // 控制激活的标签
       userChannels: [], // 接收用户频道列表
-      isChannelEditShow: false // 频道编辑的显示状态
+      isChannelEditShow: false // 频道编辑组件的显示状态
     }
   },
   methods: {

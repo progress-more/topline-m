@@ -15,9 +15,13 @@
     </van-cell>
     <van-grid :gutter='10'>
         <van-grid-item
-        v-for="channel in userChannels"
+        v-for="(channel,index) in userChannels"
         :key="channel.id"
-        :text="channel.name">
+        @click="onUserChannelClick(index)">
+        <!-- active：CSS类名，value ===index 一个条件
+        如果条件为true，则作用active类名，
+        如果条件为false 则去除active类名 -->
+        <span class="text" :class="{active: value === index}">{{channel.name}}</span>
           <van-icon
           v-show="isEditShow"
           slot="icon"
@@ -47,6 +51,10 @@ export default {
     userChannels: {
       type: Array,
       required: true
+    },
+    value: {
+      type: Number,
+      required: true
     }
   },
   data () {
@@ -56,6 +64,17 @@ export default {
     }
   },
   methods: {
+    // 点击我的频道 删除 或切换
+    onUserChannelClick (index) {
+      if (this.isEditShow && index !== 0) {
+        // 如果是编辑状态，则删除频道 iseditshow=true
+        this.userChannels.splice(index, 1)
+      } else {
+        // 如果是完成状态，则切换频道 false
+        this.$emit('input', index) // 修改激活的标签
+        this.$emit('close') // 关闭弹层
+      }
+    },
     // 点击添加频道
     onAdd (channel) {
       this.userChannels.push(channel)
@@ -105,6 +124,12 @@ export default {
               font-size: 16px;
             }
           }
+        }
+        .text {
+          font-size: 14px;
+        }
+        .active {
+          color: red;
         }
     }
 </style>
