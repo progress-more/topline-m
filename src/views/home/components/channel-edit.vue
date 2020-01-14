@@ -21,9 +21,13 @@
         <!-- active：CSS类名，value ===index 一个条件
         如果条件为true，则作用active类名，
         如果条件为false 则去除active类名 -->
-        <span class="text" :class="{active: value === index}">{{channel.name}}</span>
+        <span
+        slot="text"
+        class="text"
+        :class="{active: value === index}"
+        >{{channel.name}}</span>
           <van-icon
-          v-show="isEditShow"
+          v-show="isEditShow && index !== 0"
           slot="icon"
           class="close-icon"
           name="close" />
