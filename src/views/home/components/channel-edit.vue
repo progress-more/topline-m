@@ -3,7 +3,7 @@
       <!-- 导航栏 -->
     <van-nav-bar title="编辑频道" fixed/>
     <!-- 我的频道 -->
-    <van-cell title="我的频道">
+    <van-cell title="我的频道" :border='false'>
         <van-button
         size='mini'
         type='danger'
@@ -13,10 +13,12 @@
         <van-grid-item
         v-for="channel in userChannels"
         :key="channel.id"
-        :text="channel.name"/>
+        :text="channel.name">
+          <van-icon slot="icon" class="close-icon" name="close" />
+        </van-grid-item>
     </van-grid>
     <!-- 推荐频道 -->
-    <van-cell title="推荐频道"/>
+    <van-cell title="推荐频道" :border='false'/>
     <van-grid :gutter="10">
       <van-grid-item
         v-for="channel in remainingChannels"
@@ -84,5 +86,16 @@ export default {
 <style lang='less' scoped>
     .channel-edit {
         padding-top: 46px;
+        ::v-deep.van-grid-item__content {
+          position:relative;
+          .van-grid-item__icon-wrapper {
+            position: absolute;
+            top: -10px;
+            right: -5px;
+            .close-icon {
+              font-size: 16px;
+            }
+          }
+        }
     }
 </style>
