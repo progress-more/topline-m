@@ -28,6 +28,7 @@
 </template>
 
 <script>
+import { getAllChannels } from '@/api/channel'
 export default {
   name: 'ChannelEdit',
   components: {},
@@ -38,12 +39,22 @@ export default {
     }
   },
   data () {
-    return {}
+    return {
+      allChannels: []
+    }
   },
-  methods: {},
+  methods: {
+    async loadAllChannels () {
+      const { data } = await getAllChannels()
+      console.log(data)
+      this.allChannels = data.data.channels
+    }
+  },
   computed: {},
   watch: {},
-  created () {},
+  created () {
+    this.loadAllChannels()
+  },
   mounted () {}
 }
 </script>
