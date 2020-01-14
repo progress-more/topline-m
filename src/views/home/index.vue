@@ -31,7 +31,7 @@
       position="bottom"
       :style="{ height: '100%' }"
     >
-      <channel-edit/>
+      <channel-edit :user-channels='userChannels'/>
     </van-popup>
   </div>
 </template>
