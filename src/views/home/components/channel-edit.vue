@@ -50,7 +50,23 @@ export default {
       this.allChannels = data.data.channels
     }
   },
-  computed: {},
+  computed: {
+    // 要展示剩余频道 ，而且要根据我的频道的变化而变化，so计算属性
+    remainingChannels () {
+      const { allChannels, userChannels } = this
+      // 剩余频道 = 所有频道- 我的频道
+      const channels = []
+      // 遍历所有频道
+      allChannels.forEach(item => {
+        // 如果我的频道中不包含当前被遍历的频道，则要放入新数组中
+        // 用!userChannels.includes(item)或!userChannels.find(c=>c.id==item.id)
+        if (!userChannels.find(c => c.id === item.id)) {
+          channels.push(item)
+        }
+      })
+      return channels
+    }
+  },
   watch: {},
   created () {
     this.loadAllChannels()
