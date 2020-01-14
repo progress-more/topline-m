@@ -52,6 +52,7 @@ import { getUserChannels } from '@/api/user'
 // 引入文章列表组件
 import ArticleList from './components/article-list'
 import ChannelEdit from './components/channel-edit'
+import { getItem } from '@/utils/storage'
 export default {
   name: 'homePage',
   components: {
@@ -68,8 +69,22 @@ export default {
   methods: {
     // 获取用户频道列表
     async loadUserChannels () {
-      const { data } = await getUserChannels()
-      this.userChannels = data.data.channels
+      // const { data } = await getUserChannels()
+      // this.userChannels = data.data.channels
+      // 1.定义一个变量用来存储频道列表
+      let channels = []
+      // 2.获取本地存储的频道列表
+      const localUserChannels = getItem('user-channels')
+      // 3.如果本地存储有，就使用本地的
+      if (localUserChannels) {
+        channels = localUserChannels
+      } else {
+        // 4.如果本地没有，则请求推荐的
+        const { data } = await getUserChannels()
+        channels = data.data.channels
+      }
+      // 5.最后，把数据赋值到当前组件中
+      this.userChannels = channels
     }
   },
   created () {
