@@ -19,10 +19,14 @@
     <!-- 联想建议 -->
      <van-cell-group v-else-if = "searchText">
       <van-cell
-      :title="item"
       icon="search"
       v-for="(item, index) in suggestions"
-      :key="index"/>
+      :key="index"
+      >
+      <!-- 我们要把item处理成带有高亮的字符串
+      过滤器：专门用于文本格式化，但是他只能用在{{}}和v-bind中 -->
+        <div slot="title" v-html="highlight(item)"></div>
+      </van-cell>
     </van-cell-group>
 
     <!-- 历史记录 -->
@@ -67,6 +71,14 @@ export default {
     }
   },
   methods: {
+    // 搜索关键字高亮处理
+    highlight (str) {
+      // 如果想要动态的创建一个正则表达式，使用new RegExp手动构造
+      // 它会根据 字符串来创建一个正则表达式对象
+      // 参数2：用来指定匹配模式，列如g 全局i忽略大小写
+      const reg = new RegExp(this.searchText, 'ig')
+      return str.replace(reg, `<span style='color:red'>${this.searchText}</span>`)
+    },
     // 发生值改变事件时 获取联想建议
     async onSearchInput () {
       if (this.searchText) {
@@ -95,6 +107,9 @@ export default {
             left: 0;
             right: 0;
             z-index: 1;
+        }
+        .van-search__action {
+          color: #fff;
         }
     }
 </style>
