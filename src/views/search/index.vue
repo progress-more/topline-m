@@ -9,6 +9,7 @@
         @search="onSearch"
         @cancel="$router.back()"
         @focus='isResultShow = false'
+        @input='onSearchInput'
       />
     </form>
 
@@ -17,12 +18,11 @@
 
     <!-- 联想建议 -->
      <van-cell-group v-else-if = "searchText">
-      <van-cell title="单元格" icon="search" />
-      <van-cell title="单元格" icon="search" />
-      <van-cell title="单元格" icon="search" />
-      <van-cell title="单元格" icon="search" />
-      <van-cell title="单元格" icon="search" />
-      <van-cell title="单元格" icon="search" />
+      <van-cell
+      :title="item"
+      icon="search"
+      v-for="(item, index) in suggestions"
+      :key="index"/>
     </van-cell-group>
 
     <!-- 历史记录 -->
@@ -50,7 +50,9 @@
 </template>
 
 <script>
+import { getSuggestions } from '@/api/search'
 import SearchResult from './components/search-result'
+
 export default {
   name: 'SearchPage',
   components: {
@@ -60,10 +62,19 @@ export default {
   data () {
     return {
       searchText: '', // 输入搜索内容
-      isResultShow: false
+      isResultShow: false,
+      suggestions: [] // 接收联想建议列表
     }
   },
   methods: {
+    // 发生值改变事件时 获取联想建议
+    async onSearchInput () {
+      if (this.searchText) {
+        let { data } = await getSuggestions(this.searchText)
+        this.suggestions = data.data.options
+      }
+    },
+    //   确定搜索时获取搜索结果
     onSearch () {
       this.isResultShow = true
     }
