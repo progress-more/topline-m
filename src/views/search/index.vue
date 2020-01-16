@@ -44,10 +44,9 @@
       :title="item"
       v-for="(item,index) in searchHistories"
       :key='index'
-      @click='onSearch(item)'>
+      @click='onHistoryClick(item, index)'>
         <van-icon
         v-show="isDeleteShow"
-        @click="searchHistories.splice(index,1)"
         name="close"></van-icon>
       </van-cell>
     </van-cell-group>
@@ -110,6 +109,16 @@ export default {
       // 确定搜索 搜索结果组件显示
       // 将搜索关键字传给搜索结果组件 并获取搜索结果列表
       this.isResultShow = true
+    },
+    // 点击历史记录 判断要删除还是跳转搜索结果
+    onHistoryClick (item, index) {
+      if (this.isDeleteShow) {
+        // 删除操作
+        this.searchHistories.splice(index, 1)
+      } else {
+        // 展示搜索结果
+        this.onSearch(item)
+      }
     }
   },
   computed: {},
