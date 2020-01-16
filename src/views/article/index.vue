@@ -10,6 +10,7 @@
 
     <!-- 加载中 -->
     <van-loading
+      v-if="loading"
       class="loading"
       color="#1989fa"
       vertical
@@ -18,7 +19,7 @@
     </van-loading>
 
     <!-- 文章详情 -->
-    <div class="detail">
+    <div class="detail" v-else-if="article.title">
       <h3 class="title">{{article.title}}</h3>
       <div class="author-wrap">
         <div class="base-info">
@@ -39,10 +40,11 @@
     </div>
 
     <!-- 加载失败提示 -->
-     <div class="error">
+     <div class="error" v-else>
       <img src="./no-network.png" alt="no-network">
       <p class="text">亲，网络不给力哦~</p>
       <van-button
+        @click="loadArticle"
         class="btn"
         type="default"
         size="small"
@@ -89,7 +91,8 @@ export default {
   },
   data () {
     return {
-      article: {} // 文章详情
+      article: {}, // 文章详情
+      loading: true
     }
   },
   computed: {},
@@ -101,12 +104,14 @@ export default {
   methods: {
     //   打开页面获取文章详情
     async loadArticle () {
+      this.loading = true
       try {
         const { data } = await getArticleById(this.articleId)
         this.article = data.data
       } catch (error) {
         console.log(error)
       }
+      this.loading = false
     }
     // 点击收藏文章
     // onCollect () {}
