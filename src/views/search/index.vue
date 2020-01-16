@@ -58,6 +58,7 @@
 import { getSuggestions } from '@/api/search'
 import SearchResult from './components/search-result'
 import { getItem, setItem } from '@/utils/storage'
+import { debounce } from 'lodash'
 
 export default {
   name: 'SearchPage',
@@ -85,12 +86,14 @@ export default {
     },
 
     // 发生值改变事件时 获取联想建议
-    async onSearchInput () {
-      if (this.searchText) {
-        let { data } = await getSuggestions(this.searchText)
-        this.suggestions = data.data.options
+    // 加入函数防抖
+    onSearchInput: debounce(async function () {
+      if (!this.searchText) {
+        return
       }
-    },
+      let { data } = await getSuggestions(this.searchText)
+      this.suggestions = data.data.options
+    }, 500),
     //   确定搜索时获取搜索结果
     // 与点击联想建议跟历史记录 同用一个方法
     onSearch (q) {

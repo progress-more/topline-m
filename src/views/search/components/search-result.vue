@@ -43,7 +43,7 @@ export default {
       })
       // 2.将数据加载到页面上
       const { results } = data.data
-      console.log(results)
+      // console.log(results)
       this.list.push(...results)
       // 3.设置加载状态结束
       this.loading = false
