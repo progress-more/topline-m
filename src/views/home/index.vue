@@ -119,5 +119,8 @@ export default {
         color: #fff;
       }
     }
+    .wap-nav {
+      font-size: 25px;
+    }
   }
 </style>

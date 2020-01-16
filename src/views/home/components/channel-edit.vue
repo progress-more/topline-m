@@ -87,7 +87,7 @@ export default {
     // 加载所有频道
     async loadAllChannels () {
       const { data } = await getAllChannels()
-      console.log(data)
+      // console.log(data)
       this.allChannels = data.data.channels
     }
   },
