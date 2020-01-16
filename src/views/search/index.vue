@@ -136,8 +136,5 @@ export default {
             right: 0;
             z-index: 1;
         }
-        .van-search__action {
-          color: #fff;
-        }
     }
 </style>

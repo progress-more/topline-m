@@ -18,7 +18,15 @@ const routes = [
       { path: 'my', name: 'my', component: () => import('@/views/my') }
     ]
   },
-  { path: '/search', name: 'search', component: () => import('@/views/search') }
+  { path: '/search', name: 'search', component: () => import('@/views/search') },
+  {
+    path: '/article/:articleId',
+    name: 'article',
+    component: () => import('@/views/article'),
+    props: true
+    // 将路由参数映射到组件的props数据中
+    // 参考文档：https://router.vuejs.org/zh/guide/essentials/passing-props.html
+  }
 ]
 
 const router = new VueRouter({
