@@ -31,7 +31,7 @@
           />
           <div class="text">
             <p class="name">{{article.aut_name}}</p>
-            <p class="time">{{article.pubdate}}</p>
+            <p class="time">{{article.pubdate | relativeTime}}</p>
           </div>
         </div>
         <!-- 如果用户没有登录 或 当前文章作者不是当前登录用户
@@ -39,7 +39,7 @@
         <van-button
         v-if="!$store.state.user || article.aut_id !== $store.state.user.id"
         class="follow-btn"
-        type="info"
+        :type="article.is_followed ? 'default' : 'info'"
         size="small"
         round
         :loading='isFollowLoading'
