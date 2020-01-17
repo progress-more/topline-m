@@ -69,7 +69,9 @@
         color="orange"
         :name="article.is_collected ? 'star' : 'star-o'"
       />
+      <!-- 用户对文章的态度, -1: 无态度，0-不喜欢，1-点赞 -->
       <van-icon
+        @click="onLike"
         color="#e5645f"
         :name="article.attitude === 1 ? 'good-job' : 'good-job-o'"
       />
@@ -82,7 +84,9 @@
 import {
   getArticleById,
   addCollect,
-  deleteCollect } from '@/api/article'
+  deleteCollect,
+  addLike,
+  deleteLike } from '@/api/article'
 export default {
   name: 'ArticlePage',
   components: {},
@@ -106,8 +110,39 @@ export default {
   },
   mounted () {},
   methods: {
+    // 点击点赞或是不点赞
+    async onLike () {
+      // 两个作用 1.交互提示 2.防止网络慢用户连续不断的点击按钮请求
+      this.$toast.loading({
+        duration: 0, // 持续展示 toast
+        message: '操作中...',
+        forbidClick: true // 是否禁止背景点击
+      })
+      try {
+        // 若已点赞 取消点赞
+        if (this.article.attitude === 1) {
+          await deleteLike(this.articleId)
+          this.article.attitude = -1
+          this.$toast.success('取消点赞')
+        } else {
+          // 若未点赞 添加点赞
+          await addLike(this.articleId)
+          this.article.attitude = 1
+          this.$toast.success('点赞成功')
+        }
+      } catch (error) {
+        this.$toast.fail('操作失败')
+      }
+    },
+
     // 点击收藏或取消收藏文章
     async onCollect () {
+      // 两个作用 1.交互提示 2.防止网络慢用户连续不断的点击按钮请求
+      this.$toast.loading({
+        duration: 0, // 持续展示 toast
+        message: '操作中...',
+        forbidClick: true // 是否禁止背景点击
+      })
       try {
         // 判断 若已收藏 则取消收藏
         if (this.article.is_collected) {
@@ -170,6 +205,7 @@ export default {
                   margin-right: 5px;
                 }
                 .text {
+                    line-height: 1.5;
                     .name {
                     margin: 0;
                     font-size: 12px;
