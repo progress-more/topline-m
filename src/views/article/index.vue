@@ -34,11 +34,16 @@
             <p class="time">{{article.pubdate}}</p>
           </div>
         </div>
+        <!-- 如果用户没有登录 或 当前文章作者不是当前登录用户
+        则展示关注按钮 -->
         <van-button
+        v-if="!$store.state.user || article.aut_id !== $store.state.user.id"
         class="follow-btn"
         type="info"
         size="small"
-        round>{{article.is_followed ? '已关注' : '+ 关注'}}</van-button>
+        round
+        :loading='isFollowLoading'
+        @click="onFollow">{{article.is_followed ? '已关注' : '+ 关注'}}</van-button>
       </div>
       <div class="markdown-body" v-html="article.content"></div>
     </div>
@@ -91,6 +96,7 @@ import {
   deleteCollect,
   addLike,
   deleteLike } from '@/api/article'
+import { addFollow, deleteFollow } from '@/api/user'
 export default {
   name: 'ArticlePage',
   components: {},
@@ -104,7 +110,8 @@ export default {
   data () {
     return {
       article: {}, // 文章详情
-      loading: true
+      loading: true,
+      isFollowLoading: false // 关注按钮的loading状态
     }
   },
   computed: {},
@@ -114,6 +121,30 @@ export default {
   },
   mounted () {},
   methods: {
+    // 点击关注文章作者
+    async onFollow () {
+      // 开启按钮的loading状态
+      this.isFollowLoading = true
+
+      try {
+        // 如果已关注 则取消关注
+        const authorId = this.article.aut_id
+        if (this.article.is_followed) {
+          await deleteFollow(authorId)
+        } else {
+          // 否则添加关注
+          await addFollow(authorId)
+        }
+
+        // 更新视图
+        this.article.is_followed = !this.article.is_followed
+      } catch (error) {
+        this.$toast.fail('操作失败')
+      }
+
+      // 关闭按钮的loading状态
+      this.isFollowLoading = false
+    },
     // 点击点赞或是不点赞
     async onLike () {
       // 两个作用 1.交互提示 2.防止网络慢用户连续不断的点击按钮请求
