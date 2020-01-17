@@ -34,7 +34,11 @@
             <p class="time">{{article.pubdate}}</p>
           </div>
         </div>
-        <van-button class="follow-btn" type="info" size="small" round>+ 关注</van-button>
+        <van-button
+        class="follow-btn"
+        type="info"
+        size="small"
+        round>{{article.is_followed ? '已关注' : '+ 关注'}}</van-button>
       </div>
       <div class="markdown-body" v-html="article.content"></div>
     </div>
