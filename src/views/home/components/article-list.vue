@@ -13,6 +13,7 @@
             v-for="(article,index) in list"
             :key="index"
             :title="article.title"
+            @click="$router.push(`/article/${article.art_id.toString()}`)"
           />
         </van-list>
     </van-pull-refresh>

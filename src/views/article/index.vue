@@ -65,6 +65,7 @@
         info="9"
       />
       <van-icon
+        @click="onCollect"
         color="orange"
         :name="article.is_collected ? 'star' : 'star-o'"
       />
@@ -78,7 +79,10 @@
 </template>
 
 <script>
-import { getArticleById } from '@/api/article'
+import {
+  getArticleById,
+  addCollect,
+  deleteCollect } from '@/api/article'
 export default {
   name: 'ArticlePage',
   components: {},
@@ -102,6 +106,23 @@ export default {
   },
   mounted () {},
   methods: {
+    // 点击收藏或取消收藏文章
+    async onCollect () {
+      try {
+        // 判断 若已收藏 则取消收藏
+        if (this.article.is_collected) {
+          await deleteCollect(this.articleId)
+          this.$toast.success('取消收藏')
+        } else {
+          // 若未收藏 则添加收藏
+          await addCollect(this.articleId)
+          this.$toast.success('收藏成功')
+        }
+        this.article.is_collected = !this.article.is_collected
+      } catch (error) {
+        this.$toast.fail('操作失败')
+      }
+    },
     //   打开页面获取文章详情
     async loadArticle () {
       this.loading = true
