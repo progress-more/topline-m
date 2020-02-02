@@ -10,3 +10,20 @@ export const getComments = params => {
     params
   })
 }
+
+// 取消对评论或评论回复点赞
+export const deleteCommentLike = target => {
+  return request({
+    url: `/app/v1_0/comment/likings/${target}`,
+    method: 'DELETE'
+  })
+}
+
+// 对评论或评论回复点赞
+export const addCommentLike = target => {
+  return request({
+    url: '/app/v1_0/comment/likings',
+    method: 'POST',
+    data: { target }
+  })
+}

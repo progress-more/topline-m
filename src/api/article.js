@@ -37,7 +37,7 @@ export const deleteCollect = articleId => {
   })
 }
 
-// 收藏文章
+// 文章点赞
 export const addLike = articleId => {
   return request({
     method: 'POST',
@@ -48,7 +48,7 @@ export const addLike = articleId => {
   })
 }
 
-// 取消收藏文章
+// 取消文章点赞
 export const deleteLike = articleId => {
   return request({
     method: 'DELETE',

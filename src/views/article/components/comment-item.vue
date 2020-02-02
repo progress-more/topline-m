@@ -31,15 +31,17 @@
     </div>
     <div slot="right-icon" class="like-container">
       <van-icon
+        @click="onLike"
         :color="comment.is_liking ? '#e5645f' : ''"
         :name="comment.is_liking ? 'good-job' : 'good-job-o'"
       />
-      <span>{{ comment.like_count ? comment.like_count : '赞' }}</span>
+      <span>{{ comment.is_liking ? '1' : '赞' }}</span>
     </div>
   </van-cell>
 </template>
 
 <script>
+import { deleteCommentLike, addCommentLike } from '@/api/comment'
 
 export default {
   name: 'CommentItem',
@@ -54,7 +56,31 @@ export default {
     }
   },
 
-  methods: {}
+  methods: {
+    // 评论项点赞或取消点赞
+    async onLike () {
+      // 两个作用 1.交互提示 2.防止网络慢用户连续不断的点击按钮请求
+      this.$toast.loading({
+        duration: 0, // 持续展示 toast
+        message: '操作中...',
+        forbidClick: true // 是否禁止背景点击
+      })
+      try {
+        // 若已点赞 取消点赞
+        if (this.comment.is_liking) {
+          await deleteCommentLike(this.comment.com_id.toString())
+          this.$toast.success('取消点赞')
+        } else {
+          // 若未点赞 添加点赞
+          await addCommentLike(this.comment.com_id.toString())
+          this.$toast.success('点赞成功')
+        }
+        this.comment.is_liking = !this.comment.is_liking
+      } catch (error) {
+        this.$toast.fail('操作失败')
+      }
+    }
+  }
 }
 </script>
 
