@@ -126,7 +126,12 @@
           placeholder="请输入留言"
           show-word-limit
         />
-        <van-button size="small" type="primary">发布</van-button>
+        <van-button
+         size="small"
+         type="primary"
+         @click="onAddComment"
+         :disabled='!postMessage'
+        >发布</van-button>
       </div>
 
     </van-popup>
@@ -142,7 +147,7 @@ import {
   deleteLike } from '@/api/article'
 import { addFollow, deleteFollow } from '@/api/user'
 import CommentItem from './components/comment-item'
-import { getComments } from '@/api/comment'
+import { getComments, addComment } from '@/api/comment'
 
 export default {
   name: 'ArticlePage',
@@ -179,6 +184,46 @@ export default {
   },
   mounted () {},
   methods: {
+    // 点击发布评论
+    async onAddComment () {
+      // 1.拿到数据
+      const postMessage = this.postMessage
+      // 2.非空校验 发布中禁止背景点击
+      if (!postMessage) {
+        return
+      }
+
+      this.$toast.loading({
+        duration: 0, // 持续提示toast
+        message: '发布中...',
+        forbidClick: true// 是否禁止背景点击
+      })
+
+      // 3.请求提交（去空白）
+      try {
+        const { data } = await addComment({
+          target: this.articleId, // 评论的目标id （评论文章即为文章id，
+          // 对评论进行回复则为评论id）
+          content: postMessage
+          // art_id: 文章id，对评论内容发表回复时，需传递此参数
+          // 表明所属文章id 。对文章进行评论，不需要传此参数
+        })
+
+        // 成功后关闭弹层
+        this.isPostShow = false
+        // 将最新发布的评论展示到列表的顶部
+        this.articleComment.list.unshift(data.data.new_obj)
+        // 更新文章评论的总数量
+        this.articleComment.totalCount++
+        // 清空文本框
+        this.postMessage = ''
+
+        this.$toast.success('发布成功')
+      } catch (error) {
+        this.$toast.fail('发布失败')
+      }
+    },
+
     // 加载文章评论
     async onLoad () {
       const articleComment = this.articleComment

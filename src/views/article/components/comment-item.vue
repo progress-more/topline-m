@@ -35,7 +35,7 @@
         :color="comment.is_liking ? '#e5645f' : ''"
         :name="comment.is_liking ? 'good-job' : 'good-job-o'"
       />
-      <span>{{ comment.is_liking ? '1' : '赞' }}</span>
+      <span>{{ comment.is_liking ? comment.like_count : '赞' }}</span>
     </div>
   </van-cell>
 </template>
@@ -69,10 +69,14 @@ export default {
         // 若已点赞 取消点赞
         if (this.comment.is_liking) {
           await deleteCommentLike(this.comment.com_id.toString())
+          // 最新的点赞数量减1
+          this.comment.like_count--
           this.$toast.success('取消点赞')
         } else {
           // 若未点赞 添加点赞
           await addCommentLike(this.comment.com_id.toString())
+          // 最新的点赞数量增加1
+          this.comment.like_count++
           this.$toast.success('点赞成功')
         }
         this.comment.is_liking = !this.comment.is_liking
