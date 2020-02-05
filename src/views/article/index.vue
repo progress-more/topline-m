@@ -142,7 +142,12 @@
       position="bottom"
       style="height: 95%"
     >
+    <!-- v-if是通过条件 增加或删除DOM节点 来显示组件内容 每次点击
+    回复显示回复组件 都会重新触发生命周期 渲染组件； 若不使用v-if
+    则当条件为true时 弹层内容渲染 但之后切换回复展示弹层内容时
+    只是通过CSS控制显示和隐藏，里面的内容并不在重新渲染 ，so会导致评论的回复列表不会东塔更新；-->
       <comment-reply
+       v-if="isReplyShow"
        @click-close='isReplyShow = false'
        :currentComment='currentComment'/>
     </van-popup>
