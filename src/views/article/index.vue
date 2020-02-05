@@ -74,7 +74,7 @@
           v-for="(comment, index) in articleComment.list"
           :key="index"
           :comment="comment"
-          @click-reply="isReplyShow = true"
+          @click-reply="onReplyShow"
         />
         <!-- <van-cell
           v-for="(comment, index) in articleComment.list"
@@ -142,7 +142,9 @@
       position="bottom"
       style="height: 95%"
     >
-      评论回复
+      <comment-reply
+       @click-close='isReplyShow = false'
+       :currentComment='currentComment'/>
     </van-popup>
   </div>
 </template>
@@ -157,11 +159,13 @@ import {
 import { addFollow, deleteFollow } from '@/api/user'
 import CommentItem from './components/comment-item'
 import { getComments, addComment } from '@/api/comment'
+import CommentReply from './components/comment-reply'
 
 export default {
   name: 'ArticlePage',
   components: {
-    CommentItem
+    CommentItem,
+    CommentReply
   },
   props: {
     // 路由参数会映射到这里
@@ -184,7 +188,8 @@ export default {
       },
       isPostShow: false, // 发布评论弹层的显示
       postMessage: '', // 发布评论输入内容
-      isReplyShow: false // 回复评论弹层是否显示
+      isReplyShow: false, // 回复评论弹层是否显示
+      currentComment: {} // 点击回复的哪个评论对象
     }
   },
   computed: {},
@@ -194,6 +199,14 @@ export default {
   },
   mounted () {},
   methods: {
+    // 监听评论项的点击回复事件 接收传递的当前评论项参数
+    async onReplyShow (comment) {
+      //  将子组件中传给我的当前评论对象存储到当前组件
+      this.currentComment = comment
+      //  回复评论组件显示
+      this.isReplyShow = true
+    },
+
     // 点击发布评论
     async onAddComment () {
       // 1.拿到数据
