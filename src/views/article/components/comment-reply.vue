@@ -39,26 +39,49 @@
           type='default'
           round
           size='small'
+          @click="isPostShow = true"
         >
-            写评论
+          写评论
         </van-button>
         <van-icon
           color='#e5645f'
           name="good-job"
         />
     </div>
+
+    <!-- 发布回复 -->
+    <van-popup
+      v-model="isPostShow"
+      position="bottom"
+    >
+      <!--
+        value
+        input
+       -->
+      <post-comment
+        :comment='currentComment'
+        v-model="postMessage"
+        @click-post='onpost'
+      />
+    </van-popup>
+    <!-- /发布回复 -->
   </div>
 </template>
 
 <script>
 import CommentItem from './comment-item'
-import { getComments } from '@/api/comment'
+import { getComments, addComment } from '@/api/comment'
+import PostComment from './post-comment'
 
 export default {
   name: 'commentReply',
   props: {
     currentComment: {
       type: Object,
+      required: true
+    },
+    articleId: {
+      type: [Object, Number, String],
       required: true
     }
   },
@@ -68,13 +91,60 @@ export default {
       loading: false,
       finished: false,
       offset: null,
-      limit: 20
+      limit: 20,
+      isPostShow: false, // 评论回复弹层是否显示
+      postMessage: ''
     }
   },
   components: {
-    CommentItem
+    CommentItem,
+    PostComment
   },
   methods: {
+    // 监听发布回复评论事件
+    async onpost () {
+      // console.log(this.postMessage)
+      // 1.拿到发布评论子组件 传递的发布内容数据
+      const postMessage = this.postMessage
+
+      // 2.非空校验
+      if (!postMessage) {
+        return
+      }
+
+      this.$toast.loading({
+        duration: 0, // 持续展示 toast
+        message: '发布中...',
+        forbidClick: true // 是否禁止背景点击
+      })
+      try {
+        // 3.请求提交 给评论回复
+        const { data } = await addComment({
+          target: this.currentComment.com_id.toString(), // 评论的目标id（评论文章即为文章id，对评论进行回复则为评论id）
+          content: postMessage, // 评论内容
+          art_id: this.articleId.toString() // 文章id，对评论内容发表回复时，需要传递此参数，表明所属文章id。对文章进行评论，不要传此参数。
+        })
+        console.log(this.postMessage)
+        console.log(data)
+        // 关闭发布评论的弹层
+        this.isPostShow = false
+
+        // 将最新发布的评论展示到列表的顶部
+        this.list.unshift(data.data.new_obj)
+
+        // 更新文章评论的回复总数量
+        this.currentComment.reply_count++
+
+        // 清空文本框
+        this.postMessage = ''
+
+        this.$toast.success('发布成功')
+      } catch (error) {
+        this.$toast.fail('发布失败')
+      }
+    },
+
+    // 创建实例时 加载评论回复列表
     async onLoad () {
       // 1.请求获取数据
       const { data } = await getComments({

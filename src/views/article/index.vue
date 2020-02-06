@@ -148,6 +148,7 @@
     只是通过CSS控制显示和隐藏，里面的内容并不在重新渲染 ，so会导致评论的回复列表不会东塔更新；-->
       <comment-reply
        v-if="isReplyShow"
+       :article-id='articleId'
        @click-close='isReplyShow = false'
        :currentComment='currentComment'/>
     </van-popup>
