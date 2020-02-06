@@ -36,7 +36,7 @@ export default {
   },
   data () {
     return {
-      message: '' // 输入的评论回复内容
+    //   message: '' // 输入的评论回复内容
     }
   },
   methods: {}

@@ -16,7 +16,7 @@
     <!-- 当前评论项 -->
     <comment-item :comment='currentComment'/>
 
-    <van-cell title="所有回复" />
+    <van-cell title="所有回复" :border='false'/>
 
     <!-- 评论的回复列表 -->
     <van-list
