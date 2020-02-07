@@ -7,7 +7,7 @@
           <van-image class="avatar" round fit='cover' :src='user.photo'/>
           <div class="title">{{user.name}}</div>
         </div>
-        <van-button round size='mini'>编辑资料</van-button>
+        <van-button round size='mini' @click="$router.push('/user/profile')">编辑资料</van-button>
       </div>
       <van-grid class="data-info" :border="false">
         <van-grid-item>
