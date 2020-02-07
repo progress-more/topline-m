@@ -1,5 +1,6 @@
 // 用户相关请求模块
 import request from '@/utils/request'
+
 // 登录注册
 export const login = (data) => {
   return request({
@@ -15,6 +16,7 @@ export const login = (data) => {
     data
   })
 }
+
 // 获取短信验证码
 export const getSmsCode = mobile => {
   return request({
@@ -54,5 +56,13 @@ export const deleteFollow = userId => {
   return request({
     method: 'DELETE',
     url: `/app/v1_0/user/followings/${userId}`
+  })
+}
+
+// 获取用户资料
+export const getUserProfile = () => {
+  return request({
+    method: 'GET',
+    url: `/app/v1_0/user/profile`
   })
 }
