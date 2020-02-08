@@ -24,7 +24,7 @@
         hidden
         @change="onFileChange"
       />
-      <van-cell title="昵称" :value="user.name" is-link />
+      <van-cell title="昵称" :value="user.name" is-link @click="isEditNameShow = true"/>
       <!-- <van-cell title="介绍" :value="user" is-link /> -->
       <van-cell title="性别" :value="user.gender === 0 ? '男': '女'" is-link />
       <van-cell title="生日" :value="user.birthday" is-link />
@@ -41,6 +41,32 @@
         @click-right="onSavePhoto"
       />
     </van-image-preview>
+
+     <!-- 修改用户昵称 -->
+    <van-popup
+      v-model="isEditNameShow"
+      position="bottom"
+    >
+      <van-nav-bar
+        title="编辑昵称"
+        left-text="取消"
+        right-text="完成"
+        @click-left="isEditNameShow = false"
+        @click-right="onUpdateName"
+      />
+      <div>
+        <van-field
+          v-model="message"
+          rows="2"
+          autosize
+          type="textarea"
+          maxlength="20"
+          placeholder="请输入昵称"
+          show-word-limit
+        />
+      </div>
+    </van-popup>
+    <!-- /修改用户昵称 -->
   </div>
 </template>
 
@@ -55,7 +81,9 @@ export default {
     return {
       user: {}, // 接收用户资料
       isPreviewShow: false,
-      images: [] // 预览的图片数组
+      images: [], // 预览的图片数组
+      isEditNameShow: false,
+      message: '' // 昵称输入框信息
     }
   },
   computed: {
@@ -70,6 +98,11 @@ export default {
   },
   mounted () {},
   methods: {
+    // 跟新用户昵称
+    onUpdateName () {
+      console.log('昵称')
+    },
+
     // 点击确定 保存图片
     async onSavePhoto () {
       // 1.用户确认
@@ -144,6 +177,15 @@ export default {
       right: 0;
       bottom: 0;
       background-color: #000;
+    }
+  }
+
+  .van-popup {
+    .van-nav-bar {
+      background-color: #fff;
+      .van-nav-bar__title {
+        color: #323233;
+      }
     }
   }
 
