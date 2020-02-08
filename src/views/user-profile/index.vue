@@ -61,7 +61,7 @@
           autosize
           type="textarea"
           maxlength="20"
-          placeholder="请输入昵称"
+          :placeholder="user.name"
           show-word-limit
         />
       </div>
@@ -71,7 +71,9 @@
 </template>
 
 <script>
-import { getUserProfile, updateUserPhoto } from '@/api/user'
+import { getUserProfile,
+  updateUserPhoto,
+  updateUserProfile } from '@/api/user'
 
 export default {
   name: 'userProfile',
@@ -98,9 +100,40 @@ export default {
   },
   mounted () {},
   methods: {
-    // 跟新用户昵称
-    onUpdateName () {
-      console.log('昵称')
+    // 更新用户昵称
+    async onUpdateName () {
+      // 判断是否为空
+      if (!this.message) {
+        return
+      }
+
+      // 请求提交表单
+      await this.updateUserProfile('name', this.message)
+
+      // 更新视图
+      this.user.name = this.message
+
+      // 关闭弹层
+      this.isEditNameShow = false
+    },
+
+    // 更新用户资料 (设置一个共同的方法)
+    async updateUserProfile (field, value) {
+      this.$toast.loading({
+        duration: 0, // 持续展示 toast
+        message: '更新中...',
+        forbidClick: true // 是否禁止背景点击
+      })
+      // 发送请求
+      try {
+        await updateUserProfile({
+          [field]: value // 注意属性名使用中括号包裹，否则会当做字符串来使用而不是变量
+        })
+
+        this.$toast.success('更新成功')
+      } catch (error) {
+        this.$toast.success('更新失败')
+      }
     },
 
     // 点击确定 保存图片
