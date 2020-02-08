@@ -23,7 +23,8 @@ import {
   Popup,
   Search,
   Loading,
-  Divider
+  Divider,
+  ImagePreview
 } from 'vant'
 
 Vue.use(Button)
@@ -48,3 +49,4 @@ Vue.use(Button)
   .use(Search)
   .use(Loading)
   .use(Divider)
+  .use(ImagePreview)
