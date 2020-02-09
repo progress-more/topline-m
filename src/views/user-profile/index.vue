@@ -24,7 +24,7 @@
         hidden
         @change="onFileChange"
       />
-      <van-cell title="昵称" :value="user.name" is-link @click="isEditNameShow = true"/>
+      <van-cell title="昵称" :value="user.name" is-link @click="onClickName"/>
       <!-- <van-cell title="介绍" :value="user" is-link /> -->
       <van-cell title="性别" :value="user.gender === 0 ? '男': '女'" is-link />
       <van-cell title="生日" :value="user.birthday" is-link />
@@ -61,7 +61,6 @@
           autosize
           type="textarea"
           maxlength="20"
-          :placeholder="user.name"
           show-word-limit
         />
       </div>
@@ -100,6 +99,12 @@ export default {
   },
   mounted () {},
   methods: {
+    // 点击昵称 弹出层显示 展示当前昵称
+    onClickName () {
+      this.isEditNameShow = true
+      this.message = this.user.name
+    },
+
     // 更新用户昵称
     async onUpdateName () {
       // 判断是否为空
@@ -117,7 +122,7 @@ export default {
       this.isEditNameShow = false
     },
 
-    // 更新用户资料 (设置一个共同的方法)
+    // 更新用户资料 (一个接口 so设置一个共同的方法)
     async updateUserProfile (field, value) {
       this.$toast.loading({
         duration: 0, // 持续展示 toast
