@@ -26,7 +26,12 @@
       />
       <van-cell title="昵称" :value="user.name" is-link @click="onClickName"/>
       <!-- <van-cell title="介绍" :value="user" is-link /> -->
-      <van-cell title="性别" :value="user.gender === 0 ? '男': '女'" is-link />
+      <van-cell
+        title="性别"
+        :value="user.gender === 0 ? '女': '男'"
+        is-link
+        @click="isEditGenderShow = true"
+      />
       <van-cell title="生日" :value="user.birthday" is-link />
     </van-cell-group>
 
@@ -66,6 +71,15 @@
       </div>
     </van-popup>
     <!-- /修改用户昵称 -->
+
+    <!-- 修改用户性别 -->
+    <van-action-sheet
+      v-model="isEditGenderShow"
+      :actions="actions"
+      cancel-text="取消"
+      @cancel="isEditGenderShow = false"
+      @select="onGenderSelect"
+    />
   </div>
 </template>
 
@@ -84,7 +98,13 @@ export default {
       isPreviewShow: false,
       images: [], // 预览的图片数组
       isEditNameShow: false,
-      message: '' // 昵称输入框信息
+      message: '', // 昵称输入框信息
+      isEditGenderShow: false,
+      actions: [
+        // name 会显示出来 value是自己添加的
+        { name: '男', value: 1 },
+        { name: '女', value: 0 }
+      ]
     }
   },
   computed: {
@@ -99,6 +119,16 @@ export default {
   },
   mounted () {},
   methods: {
+    // 修改用户性别
+    async onGenderSelect (data) {
+      // 发送请求
+      await this.updateUserProfile('gender', data.value)
+      // 更新视图
+      this.user.gender = data.value
+      // 关闭上拉菜单
+      this.isEditGenderShow = false
+    },
+
     // 点击昵称 弹出层显示 展示当前昵称
     onClickName () {
       this.isEditNameShow = true

@@ -24,7 +24,8 @@ import {
   Search,
   Loading,
   Divider,
-  ImagePreview
+  ImagePreview,
+  ActionSheet
 } from 'vant'
 
 Vue.use(Button)
@@ -50,3 +51,4 @@ Vue.use(Button)
   .use(Loading)
   .use(Divider)
   .use(ImagePreview)
+  .use(ActionSheet)
