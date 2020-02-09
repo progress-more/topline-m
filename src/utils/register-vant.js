@@ -25,7 +25,8 @@ import {
   Loading,
   Divider,
   ImagePreview,
-  ActionSheet
+  ActionSheet,
+  DatetimePicker
 } from 'vant'
 
 Vue.use(Button)
@@ -52,3 +53,4 @@ Vue.use(Button)
   .use(Divider)
   .use(ImagePreview)
   .use(ActionSheet)
+  .use(DatetimePicker)

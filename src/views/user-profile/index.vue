@@ -32,7 +32,12 @@
         is-link
         @click="isEditGenderShow = true"
       />
-      <van-cell title="生日" :value="user.birthday" is-link />
+      <van-cell
+        title="生日"
+        :value="user.birthday"
+        is-link
+        @click="isEditBirthdayShow = true"
+      />
     </van-cell-group>
 
     <!-- 头像预览 -->
@@ -80,6 +85,24 @@
       @cancel="isEditGenderShow = false"
       @select="onGenderSelect"
     />
+
+    <!-- 编辑用户生日 -->
+    <van-popup
+      v-model="isEditBirthdayShow"
+      position="bottom"
+    >
+    <!--v-model="currentDate" 表示默认显示时间和同步用户当前选择的时间；
+        :min-date="minDate" 最小可选日期
+        :max-date="maxDate"  最大可选日期-->
+      <van-datetime-picker
+        :value="currentDate"
+        type="date"
+        :min-date="minDate"
+        :max-date="maxDate"
+        @cancel='isEditBirthdayShow = false'
+        @confirm='onUpdateBirthday'
+      />
+    </van-popup>
   </div>
 </template>
 
@@ -87,6 +110,7 @@
 import { getUserProfile,
   updateUserPhoto,
   updateUserProfile } from '@/api/user'
+import moment from 'moment'
 
 export default {
   name: 'userProfile',
@@ -104,13 +128,21 @@ export default {
         // name 会显示出来 value是自己添加的
         { name: '男', value: 1 },
         { name: '女', value: 0 }
-      ]
+      ],
+      isEditBirthdayShow: false,
+      minDate: new Date(1970, 0, 1),
+      maxDate: new Date()
+      // currentDate: new Date()
     }
   },
   computed: {
     // 作用：封装属性 使用方便 不用每次都this.$refs['file']
     file () {
       return this.$refs['file']
+    },
+    currentDate () {
+      // 把字符串格式的日期转换为js日期对象 设置给vant日期选择器
+      return new Date(this.user.birthday)
     }
   },
   watch: {},
@@ -119,6 +151,19 @@ export default {
   },
   mounted () {},
   methods: {
+    // 修改用户生日
+    async onUpdateBirthday (value) {
+      // 由于接口要求日期为string格式 而value为object格式
+      // so使用moment把日期对象格式化为指定格式的字符串
+      const date = moment(value).format('YYYY-MM-DD')
+      // 发送请求
+      await this.updateUserProfile('birthday', date)
+      // 更新视图
+      this.user.birthday = date
+      // 关闭弹层
+      this.isEditBirthdayShow = false
+    },
+
     // 修改用户性别
     async onGenderSelect (data) {
       // 发送请求
