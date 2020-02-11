@@ -5,12 +5,13 @@
     finished-text="没有更多了"
     @load="onLoad"
   >
-  收藏
-    <van-cell v-for="item in list" :key="item" :title="item" />
+    <van-cell v-for="(item, index) in list" :key="index" :title="item.title" />
   </van-list>
 </template>
 
 <script>
+import { getCollectArticles } from '@/api/article'
+
 export default {
   name: 'UserArticle',
   components: {},
@@ -19,7 +20,9 @@ export default {
     return {
       list: [],
       loading: false,
-      finished: false
+      finished: false,
+      page: 1, // 当前页码
+      perPage: 10 // 每页大小
     }
   },
   computed: {},
@@ -27,20 +30,26 @@ export default {
   created () {},
   mounted () {},
   methods: {
-    onLoad () {
-      // 异步更新数据
-      // setTimeout 仅做示例，真实场景中一般为 ajax 请求
-      setTimeout(() => {
-        for (let i = 0; i < 10; i++) {
-          this.list.push(this.list.length + 1)
-        }
-        // 加载状态结束
-        this.loading = false
-        // 数据全部加载完成
-        if (this.list.length >= 40) {
-          this.finished = true
-        }
-      }, 1000)
+    //   加载当前用户文章作品
+    async onLoad () {
+      // 发送请求
+      const { data } = await getCollectArticles({
+        page: this.page,
+        per_page: this.perPage
+      })
+
+      //   渲染页面
+      const { results } = data.data
+      this.list.push(...results)
+
+      // 关闭loading
+      this.loading = false
+      // 判断是否还有数据
+      if (results.length) {
+        this.page++
+      } else {
+        this.finished = true
+      }
     }
   }
 }
