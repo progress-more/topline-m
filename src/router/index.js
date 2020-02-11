@@ -28,9 +28,14 @@ const routes = [
     // 参考文档：https://router.vuejs.org/zh/guide/essentials/passing-props.html
   },
   { path: '/user/profile', name: 'user-profile', component: () => import('@/views/user-profile') },
-  { path: '/my-article', name: 'my-article', component: () => import('@/views/user-articles') },
-  { path: '/my-article/collect', name: 'my-collect', component: () => import('@/views/user-articles') },
-  { path: '/my-article/history', name: 'my-history', component: () => import('@/views/user-articles') }
+  {
+    path: '/my-article/:type',
+    name: 'my-article',
+    component: () => import('@/views/user-articles'),
+    props: true
+  }
+  // { path: '/my-article/collect', name: 'my-collect', component: () => import('@/views/user-articles') },
+  // { path: '/my-article/history', name: 'my-history', component: () => import('@/views/user-articles') }
 ]
 
 const router = new VueRouter({

@@ -1,7 +1,12 @@
 <template>
   <div class="user-articles">
      <!-- 导航栏 -->
-    <van-nav-bar title="我的收藏/历史/作品" left-arrow @click-left="$router.back()" />
+    <van-nav-bar
+      title="我的收藏/历史/作品"
+      left-arrow
+      @click-left="$router.back()"
+      fixed
+    />
     <!-- /导航栏 -->
 
     <van-tabs v-model="active">
@@ -30,10 +35,18 @@ export default {
     CollectArticle,
     HistoryArticle
   },
-  props: {},
+  props: {
+    type: {
+      type: String
+    }
+  },
   data () {
+    let active = ['collect', 'history'].indexOf(this.type)
+    if (active === -1) {
+      active = 2
+    }
     return {
-      active: 0 // 控制激活的标签选项
+      active // 控制激活的标签选项
     }
   },
   computed: {},
@@ -44,6 +57,16 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang='less' scoped>
+  .user-articles {
+    padding-top: 50px;
+     padding-bottom: 50px;
+  /deep/ .van-tabs__wrap {
+    position: fixed;
+    top: 46px;
+    left: 0;
+    right: 0;
+    z-index: 1;
+  }
+  }
 </style>
