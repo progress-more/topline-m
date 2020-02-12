@@ -49,7 +49,7 @@
 
     <van-cell-group :border="false">
       <van-cell title="消息通知" is-link />
-      <van-cell title="小智同学" is-link />
+      <van-cell title="小智同学" is-link @click="$router.push('/user/chat')"/>
     </van-cell-group>
 
 <!-- 当用户登录时 即有token令牌时 才可以点击退出 -->

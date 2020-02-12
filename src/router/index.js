@@ -33,9 +33,10 @@ const routes = [
     name: 'my-article',
     component: () => import('@/views/user-articles'),
     props: true
-  }
+  },
   // { path: '/my-article/collect', name: 'my-collect', component: () => import('@/views/user-articles') },
   // { path: '/my-article/history', name: 'my-history', component: () => import('@/views/user-articles') }
+  { path: '/user/chat', name: 'user-chat', component: () => import('@/views/user-chat') }
 ]
 
 const router = new VueRouter({
