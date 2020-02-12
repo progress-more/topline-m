@@ -10,11 +10,14 @@
 
     <!-- 消息列表 -->
     <div class="message-list" ref="message-list">
+      <!-- :class="{ CSS类名:布尔值 }"
+      true：作用类名
+      false：不作用类名-->
       <div
         class="message-item"
-        :class="{ reverse: item % 3 === 0 }"
-        v-for="item in 20"
-        :key="item"
+        :class="{ reverse: item.isMe }"
+        v-for="(item, index) in messages"
+        :key="index"
       >
         <van-image
           class="avatar"
@@ -25,7 +28,7 @@
           src="https://img.yzcdn.cn/vant/cat.jpeg"
         />
         <div class="title">
-          <span>{{ `hello${item}` }}</span>
+          <span>{{ item.msg }}</span>
         </div>
       </div>
     </div>
@@ -54,7 +57,8 @@ export default {
   data () {
     return {
       message: '',
-      socket: null // 通信对象 代替测试的全局socket
+      socket: null, // 通信对象 代替测试的全局socket
+      messages: [] // 消息列表
     }
   },
   created () {
@@ -76,7 +80,8 @@ export default {
     // 接收消息
     // socket.on('消息类型', data => console.log(data))
     socket.on('message', message => {
-      console.log('message => ', message)
+      // console.log('message => ', message)
+      this.messages.push(message)
     })
   },
 
@@ -90,10 +95,15 @@ export default {
       }
 
       // 2.不为空 socket触发message事件 传递发送的信息及时间戳
-      this.socket.emit('message', {
+      const data = {
         msg: message,
-        timestamp: Date.now()
-      })
+        timestamp: Date.now(),
+        isMe: true // 表示是我发的消息
+      }
+      this.socket.emit('message', data)
+
+      // 将消息存储到列表中
+      this.messages.push(data)
 
       // 3.清空文本框
       this.message = ''
