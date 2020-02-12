@@ -51,6 +51,7 @@
 
 <script>
 import io from 'socket.io-client'
+import { getItem, setItem } from '@/utils/storage'
 
 export default {
   name: 'UserChat',
@@ -58,7 +59,25 @@ export default {
     return {
       message: '',
       socket: null, // 通信对象 代替测试的全局socket
-      messages: [] // 消息列表
+      messages: getItem('chat-messages') || [] // 消息列表
+    }
+  },
+  watch: {
+    // 监视函数有两个参数
+    // 参数1：最新值
+    // 参数2：变化之前的旧值
+    messages (value) {
+      // 当消息列表变化时，持久化存储到本地存储
+      setItem('chat-messages', value)
+
+      // 让消息列表滚动到底部
+      // 又 根据浏览器解析顺序 当数据变化后 DOM元素并未立即变化
+      // so 当需要 数据变化后立即操作DOM元素时 就需要使用this.$nextTick(() => {
+      //   this.toBottom()
+      // })  相当于一个定时器
+      this.$nextTick(() => {
+        this.toBottom()
+      })
     }
   },
   created () {
@@ -86,6 +105,12 @@ export default {
   },
 
   methods: {
+    // 滚动条自动滚动到底部
+    toBottom () {
+      const listContainer = this.$refs['message-list']
+      listContainer.scrollTop = listContainer.scrollHeight
+    },
+
     // 点击发送信息
     onSend () {
       // 1.获取发送内容 若为空则返回
