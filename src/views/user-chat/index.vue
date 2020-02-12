@@ -42,12 +42,23 @@
 </template>
 
 <script>
+import io from 'socket.io-client'
+
 export default {
   name: 'UserChat',
   data () {
     return {
       message: ''
     }
+  },
+  created () {
+    // 建立websocket连接
+    // 这里的请求是websocket请求 和项目中的axios没有任何关系
+    const socket = io('http://ttapi.research.itcast.cn')
+
+    socket.on('connect', function () {
+      console.log('建立连接成功')
+    })
   }
 }
 </script>
