@@ -34,7 +34,7 @@ export default new Vuex.Store({
     removeCachePage (state, name) {
       const index = state.cachePages.indexOf(name)
       if (index !== -1) {
-        state.cachePages.splice(index, 1)
+        state.cachePages.splice(index)
       }
     }
   },
