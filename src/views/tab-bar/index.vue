@@ -1,7 +1,10 @@
 <template>
     <div class="home-container">
         <!--路由容器 -->
-        <router-view></router-view>
+        <keep-alive>
+          <router-view/>
+        </keep-alive>
+
         <!-- tab切换拦 -->
           <van-tabbar route>
           <van-tabbar-item to='/' icon="home-o">首页</van-tabbar-item>
@@ -14,6 +17,7 @@
 
 <script>
 export default {
+  name: 'TabBar',
   data () {
     return {
 

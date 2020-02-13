@@ -108,6 +108,9 @@ export default {
     // 滚动条自动滚动到底部
     toBottom () {
       const listContainer = this.$refs['message-list']
+      // listContainer.scrollTop 获取距离顶部的距离
+      // listContainer.scrollTop = xxx 设置距离顶部的距离
+      // DOM元素. scrollHeight 可滚动的高度
       listContainer.scrollTop = listContainer.scrollHeight
     },
 

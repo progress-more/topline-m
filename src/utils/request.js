@@ -98,7 +98,22 @@ request.interceptors.response.use(
 function redirectLogin () {
   // router.currentRoute 当前路由对象，和组件中的this.$route一样
   // 登陆成功后跳转回原来页面的话，需在路径后添加查询参数
-  router.push('/login?redirect=' + router.currentRoute.fullPath)
+  // 写法一：
+  // router.push('/login?redirect=' + router.currentRoute.fullPath)
+  // 写法二：
+  router.push({
+    name: 'login',
+    // query参数会以 ?key=value&key=value 的格式添加到 url 后面；
+    // query参数不需要配置路由规则，可以传递任意参数；
+    // query是固定的语法格式，用来传递 ?key=value 查询字符串
+    query: {
+      // 这里使用查询参数把要跳转回来的路由地址传递给了登录页面
+      // router.currentRoute 就是当前路由对象，好比我们在组件中的 this.$route
+      // 当前路由对象的fullPath 就是当前路由的路径
+      // redirect 是我自己起的一个名字
+      redirect: router.currentRoute.fullPath
+    }
+  })
 }
 
 export default request
