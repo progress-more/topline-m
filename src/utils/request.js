@@ -49,17 +49,21 @@ request.interceptors.response.use(
   // 响应失败进入第二个函数 ，该函数的参数是错误对象
   async function (error) {
     // 如果响应码是401 则请求新的token
-    // 响应拦截器中的 error 就是相应的错误对象
+    // 响应拦截器中的 error 就是响应的错误对象
     if (error.response && error.response.status === 401) {
       // 校验是否有refresh_token
       const user = store.state.user
       if (!user || !user.refresh_token) {
-        router.push('/login')
+        // 强制跳转道登录页
+        redirectLogin()
         // 代码不往后执行
         return
       }
 
       // 如果有refresh_token ，则请求获取新的token
+      // 这里不使用request 是因为用request会再次进入请求拦截器，
+      // 失败还会走响应拦截器，而且在请求拦截器中正常的是统一添加token请求头，
+      // 而刷新token时请求头添加的是refresh——token，so需用axios与request互不干涉
       try {
         const res = await axios({
           method: 'PUT',
@@ -77,16 +81,24 @@ request.interceptors.response.use(
         })
 
         // 把之前失败的用户请求继续发出去
+        // 由于每个页面都有可能token过期，需传参数；
+        // 而且再次将错误请求发出的话才会获取正确的页面
         // config 是一个对象 其中包含本次失败请求相关的那些配置信息，
         // return 把request 的请求结果继续返回给发请求的具体位置
         return request(error.config)
       } catch (error) {
         // 如果获取失败，直接跳转登录页
-        router.push('/login')
+        redirectLogin()
       }
     }
     return Promise.reject(error)
   }
 )
+
+function redirectLogin () {
+  // router.currentRoute 当前路由对象，和组件中的this.$route一样
+  // 登陆成功后跳转回原来页面的话，需在路径后添加查询参数
+  router.push('/login?redirect=' + router.currentRoute.fullPath)
+}
 
 export default request
