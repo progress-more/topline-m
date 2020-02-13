@@ -42,7 +42,7 @@
       <van-grid-item text="浏览历史" to='/my-article/history'>
         <van-icon slot="icon" name="browsing-history-o" color="#ffa023" />
       </van-grid-item>
-      <van-grid-item text="作品" to='/my-article'>
+      <van-grid-item text="作品" to='/my-article/myarticle'>
         <van-icon slot="icon" name="edit" color="#678eff" />
       </van-grid-item>
     </van-grid>

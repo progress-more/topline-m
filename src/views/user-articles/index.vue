@@ -42,10 +42,11 @@ export default {
     }
   },
   data () {
-    let active = ['collect', 'history'].indexOf(this.type)
-    if (active === -1) {
-      active = 2
-    }
+    let active = ['collect', 'history', 'myarticle'].indexOf(this.type)
+    // if (active === -1) {
+    //   active = 2
+    // }
+    console.log(['collect', 'history'].indexOf(this.type))
     return {
       active // 控制激活的标签选项
     }
