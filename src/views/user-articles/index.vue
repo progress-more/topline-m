@@ -1,10 +1,12 @@
 <template>
   <div class="user-articles">
      <!-- 导航栏 -->
+     <!-- 若是在这个页面token过期，再次登陆成功后跳到这个页面，然后点击返回的话会希望在回到 登录页
+     ，so用replace -->
     <van-nav-bar
       title="我的收藏/历史/作品"
       left-arrow
-      @click-left="$router.back()"
+      @click-left="$router.replace('my')"
       fixed
     />
     <!-- /导航栏 -->

@@ -154,7 +154,8 @@ export default {
         this.$toast.success('登录成功')
         // 如果有redirect 则跳转到来源页 没有就跳转到首页
         const redirect = this.$route.query.redirect || '/'
-        this.$router.push(redirect)
+        // 不在回到登录页
+        this.$router.replace(redirect)
         // console.log(res)
       } catch (error) {
         // console.log(error)
